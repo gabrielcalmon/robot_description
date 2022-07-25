@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<robot name="macroed" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="base_length" value="0.200"/>
+  <xacro:property name="base_width" value="0.140"/>
+  <xacro:property name="base_height" value="0.0764"/>
+
+  <xacro:property name="wheel_z_offset" value="${-base_height/2 + 0.0228}"/><xacro:property name="wheel_width" value="0.036"/>
+  <xacro:property name="wheel_radius" value="0.039"/>
+
+  <xacro:property name="wheel_x_offset" value="0.06"/>
+  <xacro:property name="wheel_y_offset" value="${base_width/2 + wheel_width/2 + 0.0165}"/>
+  <xacro:property name="wheel_z_offset" value="${-base_height/2 + 0.0228}"/>
+
+  <xacro:property name="M_PI" value="3.14159"/>
+
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+
+   <xacro:macro name="default_inertial" params="mass">
+    <inertial>
+      <mass value="${mass}" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+  </xacro:macro>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <!-- <box size="${base_length} ${base_width} ${base_height}"/> -->
+        <!-- <mesh filename="package://robot_description/meshes/base_link.dae"/> -->
+        <mesh filename="$(find robot_description)/meshes/base.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}"/>
+      </geometry>
+    </collision>
+    <xacro:default_inertial mass="10"/>
+  </link>
+
+  <link name="right_wheel">
+    <visual>
+      <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.035"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <xacro:default_inertial mass="10"/>
+  </link>
+
+  <joint name="right_wheeel_joint" type="continuous">
+    <axis xyz="0 1 0" rpy="0 0 0" />
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="0.0 0.0 ${-(wheel_radius-wheel_z_offset)}" rpy="0 0 0"/>
+  </joint>
+
+</robot>
